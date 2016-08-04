@@ -21,7 +21,7 @@ main = do
  	, workspaces = ["www", "term", "irc", "music", "video"] ++ map show [6..9]
         , manageHook         = manageDocks <+> myManageHook
         , layoutHook         = avoidStruts $ myLayoutHook $ layoutHook defaultConfig
-        , modMask = mod4Mask
+        -- , modMask = mod4Mask
         -- fixes windows hiding xmobar on workspace 1
         , handleEventHook = docksEventHook <+> handleEventHook defaultConfig
         , logHook            = dynamicLogWithPP xmobarPP 
