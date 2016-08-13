@@ -1,6 +1,7 @@
 import XMonad
 import XMonad.Layout
 import XMonad.Layout.Spacing
+import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
@@ -18,9 +19,9 @@ main = do
           borderWidth        = 2
         , normalBorderColor  = "black"
         , focusedBorderColor = "orange"
- 	, workspaces = ["www", "term", "irc", "music", "video"] ++ map show [6..9]
+ 	, workspaces = ["www", "term", "irc", "music", "video", "gaming"] ++ map show [7..9]
         , manageHook         = manageDocks <+> myManageHook
-        , layoutHook         = avoidStruts $ myLayoutHook $ layoutHook defaultConfig
+        , layoutHook         = lessBorders OnlyFloat $ avoidStruts $ myLayoutHook $ layoutHook defaultConfig
         -- , modMask = mod4Mask
         -- fixes windows hiding xmobar on workspace 1
         , handleEventHook = docksEventHook <+> handleEventHook defaultConfig
@@ -40,6 +41,7 @@ myManageHook = composeAll
       className =? "Hexchat"	          --> doShift "irc",
       className =? "Gnome-terminal"	  --> doShift "term",
       className =? "vlc"	          --> doShift "video",
+      className =? "Steam"		  --> doShift "gaming",
       isFullscreen                        --> doFullFloat,
       isDialog                            --> doCenterFloat
     ] <+> manageHook defaultConfig
