@@ -30,7 +30,9 @@ main = do
                                     ppOutput = hPutStrLn xmproc
                                   , ppTitle = xmobarColor "green" "" . shorten 75
                                  }
-        }
+        } `additionalKeys` [
+                            ((mod1Mask, xK_Page_Down), spawn "~/dotfiles/xmonad/bin/lang-change")
+                          ]
 
 
 myManageHook = composeAll
