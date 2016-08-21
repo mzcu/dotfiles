@@ -8,6 +8,7 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers (isFullscreen, isDialog,  doFullFloat, doCenterFloat)
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
+import XMonad.Util.Scratchpad
 import System.IO
 
 
@@ -19,23 +20,21 @@ main = do
           borderWidth        = 2
         , normalBorderColor  = "black"
         , focusedBorderColor = "orange"
- 	, workspaces = ["www", "term", "irc", "music", "video", "gaming"] ++ map show [7..9]
-        , manageHook         = manageDocks <+> myManageHook
-        , layoutHook         = lessBorders OnlyFloat $ avoidStruts $ myLayoutHook $ layoutHook defaultConfig
-        -- , modMask = mod4Mask
-        -- fixes windows hiding xmobar on workspace 1
-        , handleEventHook = docksEventHook <+> handleEventHook defaultConfig
+ 	, workspaces         = myWorkspaces
+        , manageHook         = myManageHook
+        , layoutHook         = myLayoutHook
+        , handleEventHook    = myHandleEventHook
         , logHook            = dynamicLogWithPP xmobarPP 
                                  { 
                                     ppOutput = hPutStrLn xmproc
-                                  , ppTitle = xmobarColor "green" "" . shorten 75
+                                  , ppTitle  = xmobarColor "green" "" . shorten 125
+                                  , ppHidden = removeNSP
                                  }
-        } `additionalKeys` [
-                            ((mod1Mask, xK_Page_Down), spawn "~/dotfiles/xmonad/bin/lang-change")
-                          ]
+        } `additionalKeys` myKeys
 
+myWorkspaces = ["www", "term", "irc", "music", "video", "gaming"] ++ map show [7..9]
 
-myManageHook = composeAll
+myManageHook = manageDocks <+> composeAll
     [
       className =? "Firefox"              --> doShift "www",
       className =? "Tor Browser"          --> doShift "www",
@@ -46,6 +45,20 @@ myManageHook = composeAll
       className =? "Steam"		  --> doShift "gaming",
       isFullscreen                        --> doFullFloat,
       isDialog                            --> doCenterFloat
-    ] <+> manageHook defaultConfig
+    ] <+> scratchpadManageHookDefault <+> manageHook defaultConfig
 
-myLayoutHook = spacing 5
+myLayoutHook = lessBorders OnlyFloat $ avoidStruts $ spacing 5 $ layoutHook defaultConfig
+
+myKeys = [ 
+          ((mod1Mask, xK_Page_Down), spawn "~/dotfiles/xmonad/bin/lang-change")
+         ,((mod1Mask, xK_Insert), (scratchpadSpawnActionTerminal "urxvt"))
+         ]
+
+
+-- docksEventHook fixes windows hiding xmobar on workspace 1
+myHandleEventHook = docksEventHook <+> handleEventHook defaultConfig
+
+-- Filters-out the NSP workspace from xmobar list
+removeNSP :: WorkspaceId -> String
+removeNSP "NSP" = ""
+removeNSP name  = name
