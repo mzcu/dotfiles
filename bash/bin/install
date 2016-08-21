@@ -1,0 +1,29 @@
+#!/bin/bash
+
+#
+# Adds the code to include our custom settings into already present .bashrc file.
+# This is useful on ubuntu which already provides some nice defaults
+#
+
+BASHRC=~/.bashrc # note that tilde must be expanded immediately
+MYBASHRC="~/dotfiles/bash/bashrc"
+
+read -d '' -r install_code <<-EOF
+\n
+# Load custom settings
+if [ -f $MYBASHRC ]; then
+    . $MYBASHRC
+fi
+\n
+EOF
+
+install_test=$(grep -c $MYBASHRC $BASHRC >/dev/null 2>&1; echo $?)
+
+if [ $install_test -eq 0 ]; then
+  echo "Install error: $MYBASHRC already installed"
+  exit 1
+else
+  echo -e "$install_code" >> $BASHRC
+  echo "Success: bash settings installed"
+fi
+

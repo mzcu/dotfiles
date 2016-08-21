@@ -1,0 +1,4 @@
+# Plays the pronunciation and prints the mnemonics and definitions for a word
+function define {
+	(echo -e "Phoneme mnemonics: $(espeak -ven-uk-rp -x -s 120 "$1" 2> /dev/null)\n"; dict "$1") | less
+}

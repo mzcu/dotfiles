@@ -1,4 +1,4 @@
-install: install-xmonad
+install: install-xmonad install-bashrc
 
 install-xmonad:
 	rm -rf ~/.xmonad ~/.xmobarrc ~/.Xresources
@@ -8,5 +8,5 @@ install-xmonad:
 	ln -s `pwd`/xmonad/Xresources ~/.Xresources
 	xrdb -merge ~/.Xresources
 
-
-
+install-bashrc:
+	`pwd`/bash/bin/install	
