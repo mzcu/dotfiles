@@ -2,3 +2,8 @@
 function define {
 	(echo -e "Phoneme mnemonics: $(espeak -ven-uk-rp -x -s 120 "$1" 2> /dev/null)\n"; dict "$1") | less
 }
+# Load autojump if present
+autojump=/usr/share/autojump/autojump.sh
+if [ -f $autojump ]; then
+	. $autojump
+fi
