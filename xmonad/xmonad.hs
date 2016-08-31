@@ -11,7 +11,6 @@ import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.Scratchpad
 import System.IO
 
-
 main :: IO ()
 main = do
     xmproc <- spawnPipe "xmobar"
@@ -52,7 +51,7 @@ myLayoutHook = lessBorders OnlyFloat $ avoidStruts $ spacing 5 $ layoutHook defa
 myKeys = [ 
           ((mod1Mask, xK_Page_Down), spawn "~/dotfiles/xmonad/bin/lang-change")
          ,((mod1Mask, xK_Insert), (scratchpadSpawnActionTerminal "urxvt"))
-         ]
+         ] ++ multimediaKeys
 
 
 -- docksEventHook fixes windows hiding xmobar on workspace 1
@@ -62,3 +61,20 @@ myHandleEventHook = docksEventHook <+> handleEventHook defaultConfig
 removeNSP :: WorkspaceId -> String
 removeNSP "NSP" = ""
 removeNSP name  = name
+
+-- Multimedia keys
+xK_XF86AudioLowerVolume	= 0x1008ff11
+xK_XF86AudioMute       	= 0x1008ff12
+xK_XF86AudioRaiseVolume	= 0x1008ff13
+xK_XF86AudioPlay       	= 0x1008ff14
+xK_XF86AudioPrev       	= 0x1008ff16
+xK_XF86AudioNext       	= 0x1008ff17
+
+multimediaKeys = [
+          ((0, xK_XF86AudioPlay), spawn "sp play")
+         ,((0, xK_XF86AudioPrev), spawn "sp prev")
+         ,((0, xK_XF86AudioNext), spawn "sp next")
+         ,((0, xK_XF86AudioMute), spawn "amixer -D pulse sset Master toggle")
+         ,((0, xK_XF86AudioLowerVolume), spawn "amixer -D pulse sset Master 5%-")
+         ,((0, xK_XF86AudioRaiseVolume), spawn "amixer -D pulse sset Master 5%+")
+	]
