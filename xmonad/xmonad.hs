@@ -49,7 +49,7 @@ myManageHook = manageDocks <+> composeAll
 myLayoutHook = lessBorders OnlyFloat $ avoidStruts $ spacing 5 $ layoutHook defaultConfig
 
 myKeys = [ 
-          ((mod1Mask, xK_Page_Down), spawn "~/dotfiles/xmonad/bin/lang-change")
+          ((mod1Mask, xK_Page_Down), spawn ".xmonad/bin/lang-change")
          ,((mod1Mask, xK_Insert), (scratchpadSpawnActionTerminal "urxvt"))
          ] ++ multimediaKeys
 
@@ -74,7 +74,8 @@ multimediaKeys = [
           ((0, xK_XF86AudioPlay), spawn "sp play")
          ,((0, xK_XF86AudioPrev), spawn "sp prev")
          ,((0, xK_XF86AudioNext), spawn "sp next")
-         ,((0, xK_XF86AudioMute), spawn "amixer -D pulse sset Master toggle")
-         ,((0, xK_XF86AudioLowerVolume), spawn "amixer -D pulse sset Master 5%-")
-         ,((0, xK_XF86AudioRaiseVolume), spawn "amixer -D pulse sset Master 5%+")
+         ,((0, xK_XF86AudioMute), spawn ".xmonad/bin/volume toggle")
+         ,((0, xK_XF86AudioLowerVolume), spawn ".xmonad/bin/volume down")
+         ,((0, xK_XF86AudioRaiseVolume), spawn ".xmonad/bin/volume up")
 	]
+
