@@ -40,7 +40,7 @@ myManageHook = manageDocks <+> composeAll
       className =? "Spotify"              --> doShift "music",
       className =? "Hexchat"	          --> doShift "irc",
       className =? "Gnome-terminal"	  --> doShift "term",
-      className =? "vlc"	          --> doShift "video",
+      className =? "vlc"	          --> doShift "video" <+> doFullFloat,
       className =? "Steam"		  --> doShift "gaming",
       isFullscreen                        --> doFullFloat,
       isDialog                            --> doCenterFloat
