@@ -1,3 +1,8 @@
+# Using restrictive umask, make sure that following sudo defaults are configured:
+# Defaults umask = 0022
+# Defaults umask_override
+umask 0077
+
 # Plays the pronunciation and prints the mnemonics and definitions for a word
 function define {
 	(echo -e "Phoneme mnemonics: $(espeak -ven-uk-rp -x -s 120 "$1" 2> /dev/null)\n"; dict "$1") | less
