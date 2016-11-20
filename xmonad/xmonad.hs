@@ -9,12 +9,13 @@ import XMonad.Hooks.ManageHelpers (isFullscreen, isDialog,  doFullFloat, doCente
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.Scratchpad
+import XMonad.Hooks.EwmhDesktops
 import System.IO
 
 main :: IO ()
 main = do
     xmproc <- spawnPipe "xmobar"
-    xmonad $ defaultConfig
+    xmonad $ ewmh defaultConfig
         { 
           borderWidth        = 2
         , normalBorderColor  = "black"
