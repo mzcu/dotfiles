@@ -3,13 +3,14 @@ import XMonad.Layout
 import XMonad.Layout.Spacing
 import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
+import XMonad.Layout.Fullscreen (fullscreenEventHook, fullscreenFull)
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers (isFullscreen, isDialog,  doFullFloat, doCenterFloat)
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.Scratchpad
-import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.EwmhDesktops (ewmh)
 import System.IO
 
 main :: IO ()
@@ -47,16 +48,25 @@ myManageHook = manageDocks <+> composeAll
       isDialog                            --> doCenterFloat
     ] <+> scratchpadManageHookDefault <+> manageHook defaultConfig
 
-myLayoutHook = lessBorders OnlyFloat $ avoidStruts $ spacing 5 $ layoutHook defaultConfig
+myLayoutHook = lessBorders OnlyFloat $ myLayout
+
+myLayout = avoidStruts (spacing 5 (tiled ||| Full)) ||| noBorders (fullscreenFull Full)
+  where
+     tiled   = ResizableTall nmaster delta ratio []
+     nmaster = 1
+     ratio   = 1/2
+     delta   = 5/100
 
 myKeys = [ 
           ((mod1Mask, xK_Page_Down), spawn ".xmonad/bin/lang-change")
          ,((mod1Mask, xK_Insert), (scratchpadSpawnActionTerminal "urxvt"))
+         ,((mod1Mask, xK_a), sendMessage MirrorExpand)
+         ,((mod1Mask, xK_z), sendMessage MirrorShrink)
          ] ++ multimediaKeys
 
 
 -- docksEventHook fixes windows hiding xmobar on workspace 1
-myHandleEventHook = docksEventHook <+> handleEventHook defaultConfig
+myHandleEventHook = fullscreenEventHook <+> docksEventHook <+> handleEventHook defaultConfig
 
 -- Filters-out the NSP workspace from xmobar list
 removeNSP :: WorkspaceId -> String
