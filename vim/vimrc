@@ -8,6 +8,11 @@ set autoindent
 set nobackup
 set foldmethod=marker
 
+
+"
+" Notes: `za` to toggle folds
+"
+
 "Vundle config {{{1
 
 filetype off
