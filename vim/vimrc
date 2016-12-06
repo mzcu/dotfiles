@@ -73,6 +73,8 @@ nmap <leader>w :w<CR>
 inoremap <C-Space> <C-x><C-o>
 inoremap <C-@> <C-Space>
 
+set pastetoggle=<leader>p
+
 "}}}
 
 " MiniBufExplorer options {{{1
