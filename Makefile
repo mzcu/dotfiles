@@ -20,3 +20,7 @@ ifeq "" "$(wildcard $(vundle_home))"
 endif
 	ln -sf `pwd`/vim/vimrc ~/.vimrc
 
+install-powerline-fonts:
+	git clone https://github.com/powerline/fonts.git /tmp/powerline-fonts
+	/tmp/powerline-fonts/install.sh
+

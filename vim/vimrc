@@ -27,20 +27,30 @@ Plugin 'davidhalter/jedi-vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
-Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'bling/vim-bufferline'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-sensible'
 Plugin 'othree/xml.vim'
 Plugin 'elzr/vim-json'
+Plugin 'scrooloose/nerdtree'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'jpalardy/vim-slime'
 
+" Python plugins
+Plugin 'jmcantrell/vim-virtualenv'
 
-" javascript support
+" Javascript support
 Plugin 'pangloss/vim-javascript'
 let g:javascript_conceal_function="ƒ"
 
 " Haskell support
-"Plugin 'eagletmt/neco-ghc'
+Plugin 'Shougo/vimproc.vim'
+Plugin 'eagletmt/ghcmod-vim'
+Plugin 'eagletmt/neco-ghc'
+Plugin 'ervandew/supertab'
 
 " Color schemes
 Plugin 'flazz/vim-colorschemes'
@@ -55,12 +65,15 @@ colorscheme codeschool
 
 " Airline fix
 set laststatus=2
+let g:airline_powerline_fonts = 1
 
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 let g:UltiSnipsEditSplit="vertical"
 
+let g:slime_target = "tmux"
+let g:slime_paste_file = tempname()
 
 "Wildmenu options {{{1
 set wildmenu
@@ -81,46 +94,76 @@ inoremap <C-@> <C-Space>
 
 set pastetoggle=<leader>p
 
-"}}}
 
-" MiniBufExplorer options {{{1
-let g:miniBufExplMapCTabSwitchBufs = 1 
+" syntastic
+map <leader>s :SyntasticToggleMode<CR>
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+
+" ghc-mod
+map <silent> tw :GhcModTypeInsert<CR>
+map <silent> ts :GhcModSplitFunCase<CR>
+map <silent> tq :GhcModType<CR>
+map <silent> te :GhcModTypeClear<CR>
+
+" supertab
+let g:SuperTabDefaultCompletionType = '<c-x><c-o>'
+
+if has("unix")
+	inoremap <nul> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<CR>
+endif
+
+" nerdtree
+map <leader>t :NERDTreeToggle<CR>
+
+" ctrl-p
+let g:ctrlp_cmd = 'CtrlPMixed'
+let g:ctrlp_custom_ignore = '\v[\/]dist$'
+
 "}}}
 
 " Autocommands {{{1
 if has("autocmd")
-   
-  autocmd FileType make setlocal ts=8 sts=8 sw=8 noexpandtab
-  autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
-  autocmd FileType python setlocal tabstop=8 expandtab shiftwidth=4 softtabstop=4
-  autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
-  autocmd FileType css setlocal ts=2 sts=2 sw=2 expandtab
-  autocmd FileType javascript setlocal ts=4 sts=4 sw=4 noexpandtab
-  autocmd BufNewFile,BufRead *.rss set filetype=xml
-  autocmd BufNewFile,BufReadPost *.md set filetype=markdown
-  autocmd FileType haskell set omnifunc=necoghc#omnifunc
+
+	autocmd FileType make setlocal ts=8 sts=8 sw=8 noexpandtab
+	autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+	autocmd FileType python setlocal tabstop=8 expandtab shiftwidth=4 softtabstop=4
+	autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
+	autocmd FileType css setlocal ts=2 sts=2 sw=2 expandtab
+	autocmd FileType javascript setlocal ts=4 sts=4 sw=4 noexpandtab
+	autocmd BufNewFile,BufRead *.rss set filetype=xml
+	autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+	let g:haskellmode_completion_ghc = 1
+	autocmd FileType haskell set omnifunc=necoghc#omnifunc
+	autocmd FileType haskell setlocal ts=8 sts=4 sw=4 expandtab shiftround
 
 endif
 "}}}
 
 " GUI options {{{1
-if has("gui")
+if has("gui_running")
 
-set guifont=Ubuntu\ Mono\ Regular\ 10
+	set guifont=Ubuntu\ Mono\ derivative\ Powerline\ 10
+	colorscheme solarized
 
-if has("gui_macvim")
-set guifont=Menlo:h12
-colorscheme railscasts
-imap § <Esc>
-map § <Esc>
-endif
+	if has("gui_macvim")
+		set guifont=Menlo:h12
+		colorscheme railscasts
+		imap § <Esc>
+		map § <Esc>
+	endif
 
 
-if has("win32")
-colorscheme codeschool
-behave mswin
-set bs=2
-endif
+	if has("win32")
+		colorscheme codeschool
+		behave mswin
+		set bs=2
+	endif
 
 endif
 "}}}
