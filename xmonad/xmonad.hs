@@ -1,5 +1,7 @@
 import XMonad
 import XMonad.Layout
+import XMonad.Layout.LayoutModifier
+import XMonad.Layout.Gaps
 import XMonad.Layout.Spacing
 import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
@@ -11,6 +13,7 @@ import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.Scratchpad
 import XMonad.Hooks.EwmhDesktops (ewmh)
+import Graphics.X11.Xlib.Display
 import System.IO
 
 main :: IO ()
@@ -50,7 +53,7 @@ myManageHook = manageDocks <+> composeAll
 
 myLayoutHook = lessBorders OnlyFloat $ myLayout
 
-myLayout = avoidStruts (spacing 5 (tiled ||| Full)) ||| noBorders (fullscreenFull Full)
+myLayout = avoidStruts ((spacing' 12 $ tiled) ||| (spacing' 50 $ Full)) ||| noBorders (fullscreenFull Full)
   where
      tiled   = ResizableTall nmaster delta ratio []
      nmaster = 1
@@ -64,6 +67,9 @@ myKeys = [
          ,((mod1Mask, xK_z), sendMessage MirrorShrink)
          ] ++ multimediaKeys
 
+-- combines Layout.Gaps for outer spacing and Layout.Spacing for inner spacing
+spacing' :: Int -> l a -> ModifiedLayout Spacing (ModifiedLayout Gaps l) a
+spacing' x = spacing x . gaps [(U,x),(D,x),(R,x),(L,x)]
 
 -- docksEventHook fixes windows hiding xmobar on workspace 1
 myHandleEventHook = fullscreenEventHook <+> docksEventHook <+> handleEventHook defaultConfig
