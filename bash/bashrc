@@ -21,3 +21,7 @@ if [ -f $gitpropmt ]; then
 	GIT_PROMPT_ONLY_IN_REPO=1
 	GIT_PROMPT_THEME=Default_Ubuntu
 fi
+
+function del_blackholes {
+	sudo ip route list | grep blackhole | while read l; do sudo ip route del $l; done
+}
