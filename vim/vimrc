@@ -74,6 +74,7 @@ let g:UltiSnipsEditSplit="vertical"
 
 let g:slime_target = "tmux"
 let g:slime_paste_file = tempname()
+let g:slime_python_ipython = 1
 
 "Wildmenu options {{{1
 set wildmenu
