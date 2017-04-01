@@ -1,4 +1,4 @@
-install: install-xmonad install-bashrc install-vim
+install: install-xmonad install-bashrc install-vim install-readline
 
 install-xmonad:
 	rm -rf ~/.xmonad ~/.xmobarrc ~/.Xresources
@@ -24,3 +24,6 @@ install-powerline-fonts:
 	git clone https://github.com/powerline/fonts.git /tmp/powerline-fonts
 	/tmp/powerline-fonts/install.sh
 
+install-readline:
+	rm ~/.inputrc
+	ln -s `pwd`/readline/inputrc ~/.inputrc
