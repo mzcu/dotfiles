@@ -1,4 +1,4 @@
-install: install-xmonad install-bashrc install-vim install-readline
+install: install-xmonad install-bashrc install-vim install-readline install-tmux
 
 install-xmonad:
 	rm -rf ~/.xmonad ~/.xmobarrc ~/.Xresources
@@ -27,3 +27,7 @@ install-powerline-fonts:
 install-readline:
 	rm ~/.inputrc
 	ln -s `pwd`/readline/inputrc ~/.inputrc
+
+install-tmux:
+	rm ~/.tmux.conf
+	ln -s `pwd`/tmux/tmux.conf ~/.tmux.conf

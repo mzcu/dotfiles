@@ -24,6 +24,7 @@ main = do
           borderWidth        = 2
         , normalBorderColor  = "black"
         , focusedBorderColor = "orange"
+        , terminal           = myTerminal
  	, workspaces         = myWorkspaces
         , manageHook         = myManageHook
         , layoutHook         = myLayoutHook
@@ -35,6 +36,8 @@ main = do
                                   , ppHidden = removeNSP
                                  }
         } `additionalKeys` myKeys
+
+myTerminal = ".xmonad/bin/st -e tmux"
 
 myWorkspaces = ["www", "term", "irc", "music", "video", "gaming"] ++ map show [7..9]
 
@@ -62,7 +65,7 @@ myLayout = avoidStruts ((spacing' 12 $ tiled) ||| (spacing' 50 $ Full)) ||| noBo
 
 myKeys = [ 
           ((mod1Mask, xK_Page_Down), spawn ".xmonad/bin/lang-change")
-         ,((mod1Mask, xK_Insert), (scratchpadSpawnActionTerminal "urxvt"))
+         ,((mod1Mask, xK_Insert), (scratchpadSpawnActionCustom ".xmonad/bin/st -n scratchpad -e tmux"))
          ,((mod1Mask, xK_a), sendMessage MirrorExpand)
          ,((mod1Mask, xK_z), sendMessage MirrorShrink)
          ] ++ multimediaKeys
