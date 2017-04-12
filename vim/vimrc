@@ -38,6 +38,8 @@ Plugin 'elzr/vim-json'
 Plugin 'scrooloose/nerdtree'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'jpalardy/vim-slime'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-notes'
 
 " Python plugins
 Plugin 'jmcantrell/vim-virtualenv'
@@ -75,6 +77,9 @@ let g:UltiSnipsEditSplit="vertical"
 let g:slime_target = "tmux"
 let g:slime_paste_file = tempname()
 let g:slime_python_ipython = 1
+
+let g:notes_directories = ['~/Documents/notes', '~/Dropbox/notes']
+let g:notes_suffix = '.txt'
 
 "Wildmenu options {{{1
 set wildmenu
