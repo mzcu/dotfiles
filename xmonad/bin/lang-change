@@ -1,6 +1,6 @@
 #!/bin/bash
 
-layout=$(setxkbmap -query | awk 'END{print $2}')
+layout=$(setxkbmap -query | grep layout | awk '{print $2}')
 
 function notify {
   notify-send -u low -i config-language -t 1000 "Keyboard layout changed" "Layout set to $1"
