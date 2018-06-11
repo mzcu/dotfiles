@@ -1,0 +1,15 @@
+nmapclear
+
+set surround
+let mapleader = ","
+
+nnoremap <leader>n :back<cr>
+nnoremap <leader>m :next<cr>
+nnoremap <leader>r :source ~/.ideavimrc<cr>
+nnoremap <leader>U gUiw<cr>
+
+
+" IDE actions
+nnoremap <leader>f :action ReformatCode<cr>
+nnoremap <leader>o :action OptimizeImports<cr>
+nnoremap <leader>x :action Maven.ExecuteGoal<cr>
