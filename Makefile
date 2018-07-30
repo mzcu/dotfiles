@@ -8,7 +8,7 @@ ifeq ($(OS),Linux)
 LINUX := true
 endif
 
-install: install-xmonad install-bashrc install-vim install-readline install-tmux
+install: install-xmonad install-bashrc install-vim install-ideavim install-readline install-tmux
 
 install-xmonad:
 ifdef LINUX:
@@ -37,6 +37,11 @@ ifeq "" "$(wildcard $(vundle_home))"
 endif
 	ln -sf `pwd`/vim/vimrc ~/.vimrc
 	vim +PluginInstall +qall
+
+install-ideavim:
+	$(info installing idea vim plugin config)
+	rm -f ~/.ideavimrc
+	ln -s `pwd`/ideavimrc ~/.ideavimrc
 
 install-powerline-fonts:
 	$(info installing powerline fonts)
