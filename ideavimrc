@@ -13,3 +13,11 @@ nnoremap <leader>U gUiw<cr>
 nnoremap <leader>f :action ReformatCode<cr>
 nnoremap <leader>o :action OptimizeImports<cr>
 nnoremap <leader>x :action Maven.ExecuteGoal<cr>
+nnoremap <leader>c :action GotoClass<cr>
+
+" System clipboard
+noremap <leader>y "*y
+noremap <leader>yy "*Y
+noremap <leader>p "*p
+noremap <leader>P "*P
+

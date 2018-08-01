@@ -95,6 +95,9 @@ nmap <leader>n :bp<CR>
 nmap <leader>m :bN<CR>
 nmap <leader>w :w<CR>
 
+" execute current file
+nnoremap <F9> :!%:p<Enter>
+
 inoremap <C-Space> <C-x><C-o>
 inoremap <C-@> <C-Space>
 
