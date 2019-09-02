@@ -1,18 +1,23 @@
 import XMonad
 import XMonad.Layout
+import XMonad.Layout.Column
 import XMonad.Layout.LayoutModifier
 import XMonad.Layout.Gaps
 import XMonad.Layout.Spacing
 import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
+import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Fullscreen (fullscreenEventHook, fullscreenFull)
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers (isFullscreen, isDialog,  doFullFloat, doCenterFloat)
+import XMonad.Hooks.DynamicProperty
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.Scratchpad
+import qualified XMonad.StackSet as W
 import XMonad.Hooks.EwmhDesktops (ewmh)
+import Data.List
 import Graphics.X11.Xlib.Display
 import System.IO
 
@@ -39,14 +44,12 @@ main = do
 
 myTerminal = ".xmonad/bin/st -e tmux"
 
-myWorkspaces = ["www", "term", "irc", "music", "video", "gaming"] ++ map show [7..9]
+myWorkspaces = ["www", "term", "irc", "music", "video", "gaming"] ++ map show [7..8] ++ ["dashboard"]
 
 myManageHook = manageDocks <+> composeAll
     [
       className =? "Firefox"              --> doShift "www",
       className =? "Tor Browser"          --> doShift "www",
-      className =? "Spotify"              --> doShift "music",
-      className =? "Hexchat"	          --> doShift "irc",
       className =? "Gnome-terminal"	  --> doShift "term",
       className =? "vlc"	          --> doShift "video" <+> doFullFloat,
       className =? "Steam"		  --> doShift "gaming",
@@ -54,16 +57,20 @@ myManageHook = manageDocks <+> composeAll
       isDialog                            --> doCenterFloat
     ] <+> scratchpadManageHookDefault <+> manageHook defaultConfig
 
-myLayoutHook = lessBorders OnlyFloat $ myLayout
+myLayoutHook = lessBorders OnlyFloat $ onWorkspace "dashboard" portraitLayout myLayout
 
-myLayout = avoidStruts ((spacing' 12 $ tiled) ||| (spacing' 50 $ Full)) ||| noBorders (fullscreenFull Full)
+
+portraitLayout = spacing' 12 $ Column 1.6
+
+myLayout = withSpacing ||| noBorders (fullscreenFull Full)
   where
+     withSpacing = avoidStruts ((spacing' 12 $ tiled) ||| (spacing' 50 $ Full))
      tiled   = ResizableTall nmaster delta ratio []
      nmaster = 1
      ratio   = 1/2
      delta   = 5/100
 
-myKeys = [ 
+myKeys = dualDisplayCustomization ++ [ 
           ((mod1Mask, xK_Page_Down), spawn ".xmonad/bin/lang-change")
          ,((mod1Mask, xK_Insert), (scratchpadSpawnActionCustom ".xmonad/bin/st -n scratchpad -e tmux"))
          ,((mod1Mask, xK_a), sendMessage MirrorExpand)
@@ -75,7 +82,9 @@ spacing' :: Int -> l a -> ModifiedLayout Spacing (ModifiedLayout Gaps l) a
 spacing' x = spacing x . gaps [(U,x),(D,x),(R,x),(L,x)]
 
 -- docksEventHook fixes windows hiding xmobar on workspace 1
-myHandleEventHook = fullscreenEventHook <+> docksEventHook <+> handleEventHook defaultConfig
+myHandleEventHook = fullscreenEventHook <+> docksEventHook <+> dynamicWindowPropertyHook <+> handleEventHook defaultConfig
+
+dynamicWindowPropertyHook = dynamicPropertyChange "WM_NAME" (className =? "Spotify" --> doShift "dashboard")
 
 -- Filters-out the NSP workspace from xmobar list
 removeNSP :: WorkspaceId -> String
@@ -98,4 +107,10 @@ multimediaKeys = [
          ,((0, xK_XF86AudioLowerVolume), spawn ".xmonad/bin/volume down")
          ,((0, xK_XF86AudioRaiseVolume), spawn ".xmonad/bin/volume up")
 	]
+
+-- prevents swapping of windows between displays by replacing W.greedyView with W.view
+dualDisplayCustomization = 
+        [((m .|. mod1Mask, k), windows $ f i)
+             | (i, k) <- zip myWorkspaces [xK_1 .. xK_9]
+                      , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
