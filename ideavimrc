@@ -14,6 +14,10 @@ nnoremap <leader>f :action ReformatCode<cr>
 nnoremap <leader>o :action OptimizeImports<cr>
 nnoremap <leader>x :action Maven.ExecuteGoal<cr>
 nnoremap <leader>c :action GotoClass<cr>
+nnoremap <leader>t :action GenerateTestMethod<cr>
+nnoremap <leader>g :action Generate<cr>
+nnoremap <leader>b :action BuildMenu<cr>
+nnoremap <leader>d :action QuickJavaDoc<cr>
 
 " System clipboard
 noremap <leader>y "*y
