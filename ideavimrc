@@ -1,6 +1,9 @@
 nmapclear
 
 set surround
+set commentary
+set ideamarks
+
 let mapleader = ","
 
 nnoremap <leader>n :back<cr>
