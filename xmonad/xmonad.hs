@@ -102,6 +102,7 @@ myKeys conf @ XConfig { XMonad.modMask = modMask } = M.fromList $
          ,((modMask, xK_Insert), scratchpadSpawnActionCustom ".xmonad/bin/st -n scratchpad -e tmux")
          ,((modMask, xK_a), sendMessage MirrorExpand)
          ,((modMask, xK_z), sendMessage MirrorShrink)
+         ,((modMask .|. shiftMask, xK_l), spawn "slock")
     ] ++
 -- multimedia keys
     [
