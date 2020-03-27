@@ -6,8 +6,8 @@ Config { font = "xft:Ubuntu Mono:style=bold:pixelsize=14:antialias=true"
         , position = TopW L 100
         , commands = [
                           Run DynNetwork ["--Low","0","--High","1024000", "--high","green", "--template", "<dev>: <rx>KBs/<tx>KBs"] 10
-                        , Run Cpu ["-p", "3", "-L","0","-H","50","--normal","green","--high","red","-t", "CPU: <user>%u <system>%s <iowait>%i"] 10
-                        , Run Memory ["-t","MEM: <used>M/<total>M"] 10
+                        , Run Cpu ["-p", "1", "-L","0","-H","50","--normal","green","--high","red","-t", "<user>%u <system>%s <iowait>%i"] 10
+                        , Run Memory ["-t","<used>M/<total>M"] 10
                         , Run Com ".xmonad/bin/volume" [] "vol" 10
                         , Run Date "%T" "date" 10
                         , Run StdinReader

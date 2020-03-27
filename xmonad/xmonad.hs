@@ -1,4 +1,5 @@
 import XMonad
+import XMonad.Actions.OnScreen
 import XMonad.Layout
 import XMonad.Layout.Column
 import XMonad.Layout.LayoutModifier
@@ -20,16 +21,20 @@ import XMonad.Hooks.EwmhDesktops (ewmh)
 import Data.List
 import Graphics.X11.Xlib.Display
 import System.IO
+import qualified Data.Map as M
+
 
 main :: IO ()
 main = do
     xmproc <- spawnPipe "xmobar"
     xmonad $ ewmh defaultConfig
         { 
-          borderWidth        = 2
+          modMask            = mod4Mask
+        , borderWidth        = 2
         , normalBorderColor  = "black"
         , focusedBorderColor = "orange"
         , terminal           = myTerminal
+        , keys               = \conf -> myKeys conf `M.union` keys defaultConfig conf
  	, workspaces         = myWorkspaces
         , manageHook         = myManageHook
         , layoutHook         = myLayoutHook
@@ -40,17 +45,14 @@ main = do
                                   , ppTitle  = xmobarColor "green" "" . shorten 125
                                   , ppHidden = removeNSP
                                  }
-        } `additionalKeys` myKeys
+        }
 
 myTerminal = ".xmonad/bin/st -e tmux"
 
-myWorkspaces = ["www", "term", "irc", "music", "video", "gaming"] ++ map show [7..8] ++ ["dashboard"]
+myWorkspaces = ["main", "aux1", "aux2", "org", "video", "gaming"] ++ map show [7..8] ++ ["dashboard"]
 
 myManageHook = manageDocks <+> composeAll
     [
-      className =? "Firefox"              --> doShift "www",
-      className =? "Tor Browser"          --> doShift "www",
-      className =? "Gnome-terminal"	  --> doShift "term",
       className =? "vlc"	          --> doShift "video" <+> doFullFloat,
       className =? "Steam"		  --> doShift "gaming",
       isFullscreen                        --> doFullFloat,
@@ -70,12 +72,6 @@ myLayout = withSpacing ||| noBorders (fullscreenFull Full)
      ratio   = 1/2
      delta   = 5/100
 
-myKeys = dualDisplayCustomization ++ [ 
-          ((mod1Mask, xK_Page_Down), spawn ".xmonad/bin/lang-change")
-         ,((mod1Mask, xK_Insert), (scratchpadSpawnActionCustom ".xmonad/bin/st -n scratchpad -e tmux"))
-         ,((mod1Mask, xK_a), sendMessage MirrorExpand)
-         ,((mod1Mask, xK_z), sendMessage MirrorShrink)
-         ] ++ multimediaKeys
 
 -- combines Layout.Gaps for outer spacing and Layout.Spacing for inner spacing
 spacing' :: Int -> l a -> ModifiedLayout Spacing (ModifiedLayout Gaps l) a
@@ -99,18 +95,27 @@ xK_XF86AudioPlay       	= 0x1008ff14
 xK_XF86AudioPrev       	= 0x1008ff16
 xK_XF86AudioNext       	= 0x1008ff17
 
-multimediaKeys = [
+myKeys conf @ XConfig { XMonad.modMask = modMask } = M.fromList $
+-- custom mappings
+    [ 
+          ((modMask, xK_Page_Down), spawn ".xmonad/bin/lang-change")
+         ,((modMask, xK_Insert), scratchpadSpawnActionCustom ".xmonad/bin/st -n scratchpad -e tmux")
+         ,((modMask, xK_a), sendMessage MirrorExpand)
+         ,((modMask, xK_z), sendMessage MirrorShrink)
+    ] ++
+-- multimedia keys
+    [
           ((0, xK_XF86AudioPlay), spawn "sp play")
          ,((0, xK_XF86AudioPrev), spawn "sp prev")
          ,((0, xK_XF86AudioNext), spawn "sp next")
          ,((0, xK_XF86AudioMute), spawn ".xmonad/bin/volume toggle")
          ,((0, xK_XF86AudioLowerVolume), spawn ".xmonad/bin/volume down")
          ,((0, xK_XF86AudioRaiseVolume), spawn ".xmonad/bin/volume up")
-	]
-
--- prevents swapping of windows between displays by replacing W.greedyView with W.view
-dualDisplayCustomization = 
-        [((m .|. mod1Mask, k), windows $ f i)
-             | (i, k) <- zip myWorkspaces [xK_1 .. xK_9]
-                      , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
-
+    ]
+-- multi-display keys customization
+ ++  [ 
+	((m .|. modMask, k), windows (f i))
+		| (i, k) <- zip (workspaces conf) ([xK_1 .. xK_9] ++ [xK_0])
+     		, (f, m) <- [ (viewOnScreen 0, 0)
+                 		 , (viewOnScreen 1, controlMask) ]
+   ]
