@@ -1,7 +1,7 @@
-Config { font = "xft:Ubuntu Mono:style=bold:pixelsize=14:antialias=true"
+Config { font = "xft:Arimo for Powerline:style=normal:pixelsize=15:antialias=true"
         , borderColor = "black"
         , border = TopB
-        , bgColor = "black"
+        , bgColor = "#292929"
         , fgColor = "grey"
         , position = TopW L 100
         , commands = [

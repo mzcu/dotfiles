@@ -23,16 +23,15 @@ import Graphics.X11.Xlib.Display
 import System.IO
 import qualified Data.Map as M
 
-
 main :: IO ()
 main = do
     xmproc <- spawnPipe "xmobar"
     xmonad $ ewmh defaultConfig
         { 
           modMask            = mod4Mask
-        , borderWidth        = 2
+        , borderWidth        = 1
         , normalBorderColor  = "black"
-        , focusedBorderColor = "orange"
+        , focusedBorderColor = "gray"
         , terminal           = myTerminal
         , keys               = \conf -> myKeys conf `M.union` keys defaultConfig conf
  	, workspaces         = myWorkspaces
@@ -42,8 +41,10 @@ main = do
         , logHook            = dynamicLogWithPP xmobarPP 
                                  { 
                                     ppOutput = hPutStrLn xmproc
-                                  , ppTitle  = xmobarColor "green" "" . shorten 125
+                                  , ppTitle  = xmobarColor "white" "" . shorten 125
                                   , ppHidden = removeNSP
+                                  , ppCurrent = xmobarColor "#f8f8f8" "#655c82" . wrap " *" "  "
+                                  , ppVisible = xmobarColor "#292929" "grey" . wrap " -" "  "
                                  }
         }
 
@@ -66,7 +67,7 @@ portraitLayout = spacing' 12 $ Column 1.6
 
 myLayout = withSpacing ||| noBorders (fullscreenFull Full)
   where
-     withSpacing = avoidStruts ((spacing' 12 $ tiled) ||| (spacing' 50 $ Full))
+     withSpacing = avoidStruts (tiled ||| (spacing' 25 $ Full))
      tiled   = ResizableTall nmaster delta ratio []
      nmaster = 1
      ratio   = 1/2
