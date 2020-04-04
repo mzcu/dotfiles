@@ -15,5 +15,5 @@ Config { font = "xft:Arimo for Powerline:style=normal:pixelsize=15:antialias=tru
                         ]
         , sepChar = "%"
         , alignSep = "}{"
-        , template = "%StdinReader% }{ VOL: %vol% | %cpu% | %memory% | %dynnetwork% | %EHAM% | <fc=#ee9a00>%date%</fc>                "
+        , template = "%StdinReader% }{ %EHAM% | VOL: %vol% | %cpu% | %memory% | %dynnetwork% | <fc=#ee9a00>%date%</fc>                             "
         }

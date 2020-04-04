@@ -43,7 +43,7 @@ main = do
                                     ppOutput = hPutStrLn xmproc
                                   , ppTitle  = xmobarColor "white" "" . shorten 125
                                   , ppHidden = removeNSP
-                                  , ppCurrent = xmobarColor "#f8f8f8" "#655c82" . wrap " *" "  "
+                                  , ppCurrent = xmobarColor "#f8f8f8" "#02b3e4" . wrap " *" "  "
                                   , ppVisible = xmobarColor "#292929" "grey" . wrap " -" "  "
                                  }
         }
@@ -95,12 +95,13 @@ xK_XF86AudioRaiseVolume	= 0x1008ff13
 xK_XF86AudioPlay       	= 0x1008ff14
 xK_XF86AudioPrev       	= 0x1008ff16
 xK_XF86AudioNext       	= 0x1008ff17
+xK_XF86HomePage         = 0x1008ff18
 
 myKeys conf @ XConfig { XMonad.modMask = modMask } = M.fromList $
 -- custom mappings
     [ 
           ((modMask, xK_Page_Down), spawn ".xmonad/bin/lang-change")
-         ,((modMask, xK_Insert), scratchpadSpawnActionCustom ".xmonad/bin/st -n scratchpad -e tmux")
+         ,((controlMask, xK_grave), scratchpadSpawnActionCustom ".xmonad/bin/st -n scratchpad -e tmux")
          ,((modMask, xK_a), sendMessage MirrorExpand)
          ,((modMask, xK_z), sendMessage MirrorShrink)
          ,((modMask .|. shiftMask, xK_l), spawn "slock")
@@ -113,6 +114,7 @@ myKeys conf @ XConfig { XMonad.modMask = modMask } = M.fromList $
          ,((0, xK_XF86AudioMute), spawn ".xmonad/bin/volume toggle")
          ,((0, xK_XF86AudioLowerVolume), spawn ".xmonad/bin/volume down")
          ,((0, xK_XF86AudioRaiseVolume), spawn ".xmonad/bin/volume up")
+         ,((0, xK_XF86HomePage), spawn "lights")
     ]
 -- multi-display keys customization
  ++  [ 
