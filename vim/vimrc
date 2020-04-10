@@ -33,6 +33,7 @@ Plugin 'bling/vim-bufferline'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-sensible'
+Plugin 'tpope/vim-commentary'
 Plugin 'othree/xml.vim'
 Plugin 'elzr/vim-json'
 Plugin 'scrooloose/nerdtree'
@@ -61,11 +62,13 @@ filetype plugin indent on
 "}}}
 
 syntax on
-colorscheme codeschool
+colorscheme railscasts
 
-" Airline fix
-set laststatus=2
+" Airline
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:bufferline_echo = 0
+let g:airline_theme='bubblegum'
 
 "let g:UltiSnipsExpandTrigger="<tab>"
 "let g:UltiSnipsJumpForwardTrigger="<c-b>"
@@ -77,17 +80,18 @@ let g:slime_paste_file = tempname()
 let g:slime_python_ipython = 1
 
 "Wildmenu options {{{1
-set wildmenu
-set wildignore=*.pyc,*.pyo,*.bak,*.png,*.jpg,*.gif,*.dll,*.o,*.exe,*.obj
-set wildmode=full
+" set wildmenu
+" set wildignore=*.pyc,*.pyo,*.bak,*.png,*.jpg,*.gif,*.dll,*.o,*.exe,*.obj
+" set wildmode=full
 "}}}
 
 " My mappings {{{1
-let mapleader = ","
+
+map <space> <leader>
 
 nmap <leader>l :set list!<CR>
 nmap <leader>n :bp<CR>
-nmap <leader>m :bN<CR>
+nmap <leader>m :bn<CR>
 nmap <leader>w :w<CR>
 
 " execute current file
