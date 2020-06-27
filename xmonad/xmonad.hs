@@ -13,6 +13,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers (isFullscreen, isDialog,  doFullFloat, doCenterFloat)
 import XMonad.Hooks.DynamicProperty
+import XMonad.Hooks.DebugStack
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.Scratchpad
@@ -60,7 +61,7 @@ myManageHook = manageDocks <+> composeAll
       isDialog                            --> doCenterFloat
     ] <+> scratchpadManageHookDefault <+> manageHook defaultConfig
 
-myLayoutHook = lessBorders OnlyFloat $ onWorkspace "dashboard" portraitLayout myLayout
+myLayoutHook = lessBorders OnlyScreenFloat $ onWorkspace "dashboard" portraitLayout myLayout
 
 
 portraitLayout = spacing' 12 $ Column 1.6
@@ -96,6 +97,8 @@ xK_XF86AudioPlay       	= 0x1008ff14
 xK_XF86AudioPrev       	= 0x1008ff16
 xK_XF86AudioNext       	= 0x1008ff17
 xK_XF86HomePage         = 0x1008ff18
+xK_XF86Launch5          = 0x1008ff45
+
 
 myKeys conf @ XConfig { XMonad.modMask = modMask } = M.fromList $
 -- custom mappings
@@ -104,7 +107,7 @@ myKeys conf @ XConfig { XMonad.modMask = modMask } = M.fromList $
          ,((controlMask, xK_grave), scratchpadSpawnActionCustom ".xmonad/bin/st -n scratchpad -e tmux")
          ,((modMask, xK_a), sendMessage MirrorExpand)
          ,((modMask, xK_z), sendMessage MirrorShrink)
-         ,((modMask .|. shiftMask, xK_l), spawn "slock")
+         ,((modMask .|. shiftMask, xK_l), spawn "slock & sleep 1 && xset dpms force off")
     ] ++
 -- multimedia keys
     [
@@ -114,12 +117,20 @@ myKeys conf @ XConfig { XMonad.modMask = modMask } = M.fromList $
          ,((0, xK_XF86AudioMute), spawn ".xmonad/bin/volume toggle")
          ,((0, xK_XF86AudioLowerVolume), spawn ".xmonad/bin/volume down")
          ,((0, xK_XF86AudioRaiseVolume), spawn ".xmonad/bin/volume up")
-         ,((0, xK_XF86HomePage), spawn "lights")
+         ,((0, xK_XF86Launch5), spawn "lights")
     ]
--- multi-display keys customization
+-- multi-display keys customization described
+-- source: https://hackage.haskell.org/package/xmonad-contrib-0.15/docs/XMonad-Actions-OnScreen.html
+-- modkey + 1-0: Switch to workspace 1-0 on screen 0
+-- modkey + control + 1-0: Switch to workspace 1-0 on screen 1
+-- modkey + control + shift + 1-0: Default greedyView behaviour
  ++  [ 
-	((m .|. modMask, k), windows (f i))
-		| (i, k) <- zip (workspaces conf) ([xK_1 .. xK_9] ++ [xK_0])
-     		, (f, m) <- [ (viewOnScreen 0, 0)
-                 		 , (viewOnScreen 1, controlMask) ]
-   ]
+	((m .|. modMask, k), windows (f i)) | (i, k) <- zip (workspaces conf) ([xK_1 .. xK_9] ++ [xK_0])
+                                            , (f, m) <- [   (viewOnScreen 0, 0)
+                 	                                    ,(viewOnScreen 1, controlMask)
+                                                            ,(W.greedyView, controlMask .|. shiftMask) 
+                                                        ]
+    ]
+-- experiments
+ ++ [ ((controlMask, xK_l), trace "test")
+    ]
