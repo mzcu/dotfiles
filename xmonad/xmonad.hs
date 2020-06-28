@@ -1,6 +1,7 @@
 import XMonad
 import XMonad.Actions.OnScreen
 import XMonad.Layout
+import XMonad.Layout.Grid
 import XMonad.Layout.Column
 import XMonad.Layout.LayoutModifier
 import XMonad.Layout.Gaps
@@ -47,7 +48,10 @@ main = do
                                   , ppCurrent = xmobarColor "#f8f8f8" "#02b3e4" . wrap " *" "  "
                                   , ppVisible = xmobarColor "#292929" "grey" . wrap " -" "  "
                                  }
+        , startupHook        = myStartupHook
         }
+
+myStartupHook = windows (viewOnScreen 1 "dashboard")
 
 myTerminal = ".xmonad/bin/st -e tmux"
 
@@ -61,7 +65,7 @@ myManageHook = manageDocks <+> composeAll
       isDialog                            --> doCenterFloat
     ] <+> scratchpadManageHookDefault <+> manageHook defaultConfig
 
-myLayoutHook = lessBorders OnlyScreenFloat $ onWorkspace "dashboard" portraitLayout myLayout
+myLayoutHook = lessBorders OnlyScreenFloat $ onWorkspace "dashboard" portraitLayout $ onWorkspace "org" Grid myLayout
 
 
 portraitLayout = spacing' 12 $ Column 1.6
