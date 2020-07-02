@@ -1,7 +1,6 @@
 import XMonad
 import XMonad.Actions.OnScreen
 import XMonad.Layout
-import XMonad.Layout.Grid
 import XMonad.Layout.Column
 import XMonad.Layout.LayoutModifier
 import XMonad.Layout.Gaps
@@ -65,7 +64,7 @@ myManageHook = manageDocks <+> composeAll
       isDialog                            --> doCenterFloat
     ] <+> scratchpadManageHookDefault <+> manageHook defaultConfig
 
-myLayoutHook = lessBorders OnlyScreenFloat $ onWorkspace "dashboard" portraitLayout $ onWorkspace "org" Grid myLayout
+myLayoutHook = lessBorders OnlyScreenFloat $ onWorkspace "dashboard" portraitLayout myLayout
 
 
 portraitLayout = spacing' 12 $ Column 1.6
