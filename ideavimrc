@@ -4,12 +4,13 @@ set surround
 set commentary
 set ideamarks
 
-let mapleader = ","
+let mapleader=" "
 
 nnoremap <leader>n :back<cr>
 nnoremap <leader>m :next<cr>
 nnoremap <leader>r :source ~/.ideavimrc<cr>
 nnoremap <leader>U gUiw<cr>
+nnoremap <leader>w :w<cr>
 
 
 " IDE actions
@@ -21,6 +22,9 @@ nnoremap <leader>t :action GenerateTestMethod<cr>
 nnoremap <leader>g :action Generate<cr>
 nnoremap <leader>b :action BuildMenu<cr>
 nnoremap <leader>d :action QuickJavaDoc<cr>
+nnoremap <leader>[ :action PreviousTab<cr>
+nnoremap <leader>] :action NextTab<cr>
+nnoremap <leader>T :action RerunFailedTests<cr>
 
 " System clipboard
 noremap <leader>y "*y
