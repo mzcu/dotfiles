@@ -50,7 +50,7 @@ main = do
         , startupHook        = myStartupHook
         }
 
-myStartupHook = windows (viewOnScreen 1 "dashboard")
+myStartupHook = windows (viewOnScreen 1 "dashboard") >> windows (viewOnScreen 0 "main")
 
 myTerminal = ".xmonad/bin/st -e tmux"
 
