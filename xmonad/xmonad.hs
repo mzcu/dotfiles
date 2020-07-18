@@ -1,4 +1,5 @@
 import XMonad
+import XMonad.Actions.CycleWS (moveTo, WSType (NonEmptyWS, WSIs), Direction1D (Next, Prev))
 import XMonad.Actions.OnScreen
 import XMonad.Layout
 import XMonad.Layout.Column
@@ -20,6 +21,7 @@ import XMonad.Util.Scratchpad
 import qualified XMonad.StackSet as W
 import XMonad.Hooks.EwmhDesktops (ewmh)
 import Data.List
+import Data.Maybe (isNothing, isJust)
 import Graphics.X11.Xlib.Display
 import System.IO
 import qualified Data.Map as M
@@ -35,7 +37,7 @@ main = do
         , focusedBorderColor = "gray"
         , terminal           = myTerminal
         , keys               = \conf -> myKeys conf `M.union` keys defaultConfig conf
- 	, workspaces         = myWorkspaces
+        , workspaces         = myWorkspaces
         , manageHook         = myManageHook
         , layoutHook         = myLayoutHook
         , handleEventHook    = myHandleEventHook
@@ -103,6 +105,11 @@ xK_XF86HomePage         = 0x1008ff18
 xK_XF86Launch5          = 0x1008ff45
 
 
+isNormalVisibleWS wisp = let 
+                            t = W.tag wisp
+                            s = W.stack wisp
+                            in not ("NSP" `isPrefixOf` t) && isJust s
+
 myKeys conf @ XConfig { XMonad.modMask = modMask } = M.fromList $
 -- custom mappings
     [ 
@@ -111,6 +118,8 @@ myKeys conf @ XConfig { XMonad.modMask = modMask } = M.fromList $
          ,((modMask, xK_a), sendMessage MirrorExpand)
          ,((modMask, xK_z), sendMessage MirrorShrink)
          ,((modMask .|. shiftMask, xK_l), spawn "slock & sleep 1 && xset dpms force off")
+         ,((modMask, xK_bracketleft), XMonad.Actions.CycleWS.moveTo Prev (WSIs $ return isNormalVisibleWS))
+         ,((modMask, xK_bracketright), XMonad.Actions.CycleWS.moveTo Next (WSIs $ return isNormalVisibleWS))
     ] ++
 -- multimedia keys
     [
