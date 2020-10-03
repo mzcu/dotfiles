@@ -10,6 +10,7 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Fullscreen (fullscreenEventHook, fullscreenFull)
+import XMonad.Layout.ThreeColumns
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers (isFullscreen, isDialog,  doFullFloat, doCenterFloat)
@@ -73,8 +74,9 @@ portraitLayout = spacing' 12 $ Column 1.6
 
 myLayout = withSpacing ||| noBorders (fullscreenFull Full)
   where
-     withSpacing = avoidStruts (tiled ||| (spacing' 25 $ Full))
+     withSpacing = avoidStruts (tiled ||| multiColumn ||| (spacing' 25 $ Full))
      tiled   = ResizableTall nmaster delta ratio []
+     multiColumn = ThreeColMid 1 (3/100) (1/3)
      nmaster = 1
      ratio   = 1/2
      delta   = 5/100

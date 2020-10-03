@@ -1,4 +1,4 @@
-Config { font = "xft:Arimo for Powerline:style=normal:pixelsize=15:antialias=true"
+Config { font = "xft:Arimo for Powerline:style=normal:pixelsize=16:antialias=true"
         , borderColor = "black"
         , border = TopB
         , bgColor = "#292929"
