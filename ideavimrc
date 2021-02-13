@@ -21,11 +21,12 @@ nnoremap <leader>x :action Maven.ExecuteGoal<cr>
 nnoremap <leader>c :action GotoClass<cr>
 nnoremap <leader>t :action GenerateTestMethod<cr>
 nnoremap <leader>g :action Generate<cr>
-nnoremap <leader>b :action BuildMenu<cr>
+nnoremap <leader>bb :action BuildMenu<cr>
 nnoremap <leader>d :action QuickJavaDoc<cr>
 nnoremap <leader>[ :action PreviousTab<cr>
 nnoremap <leader>] :action NextTab<cr>
 nnoremap <leader>T :action RerunFailedTests<cr>
+nnoremap <leader>rr :action RunMenu<cr>
 nnoremap <leader>b :action ByteCodeViewer<cr>
 
 " System clipboard
