@@ -3,24 +3,30 @@ nmapclear
 set surround
 set commentary
 set ideamarks
+set clipboard+=unnamed " use system clipboard
 
 let mapleader=" "
 
-nnoremap <leader>n :back<cr>
-nnoremap <leader>m :next<cr>
 nnoremap <leader>r :source ~/.ideavimrc<cr>
 nnoremap <leader>e :e ~/.ideavimrc<cr>
-nnoremap <leader>U gUiw<cr>
+
+nnoremap <leader>n :back<cr>
+nnoremap <leader>m :next<cr>
 nnoremap <leader>w :w<cr>
 
+nnoremap <leader>U gUiw<cr> " Uppercase a word
 
 " IDE actions
 nnoremap <leader>f :action ReformatCode<cr>
 nnoremap <leader>o :action OptimizeImports<cr>
 nnoremap <leader>x :action Maven.ExecuteGoal<cr>
-nnoremap <leader>c :action GotoClass<cr>
-nnoremap <leader>t :action GenerateTestMethod<cr>
-nnoremap <leader>g :action Generate<cr>
+
+nnoremap <leader>gc :action GotoClass<cr>
+nnoremap <leader>gd :action GotoDeclaration<cr>
+nnoremap <leader>gi :action GotoImplementation<cr>
+
+nnoremap <leader>tt :action GenerateTestMethod<cr>
+nnoremap <leader>gg :action Generate<cr>
 nnoremap <leader>bb :action BuildMenu<cr>
 nnoremap <leader>d :action QuickJavaDoc<cr>
 nnoremap <leader>[ :action PreviousTab<cr>
@@ -28,10 +34,3 @@ nnoremap <leader>] :action NextTab<cr>
 nnoremap <leader>T :action RerunFailedTests<cr>
 nnoremap <leader>rr :action RunMenu<cr>
 nnoremap <leader>b :action ByteCodeViewer<cr>
-
-" System clipboard
-noremap <leader>y "*y
-noremap <leader>yy "*Y
-noremap <leader>p "*p
-noremap <leader>P "*P
-

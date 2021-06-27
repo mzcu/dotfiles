@@ -122,6 +122,8 @@ myKeys conf @ XConfig { XMonad.modMask = modMask } = M.fromList $
          ,((modMask .|. shiftMask, xK_l), spawn "slock & sleep 1 && xset dpms force off")
          ,((modMask, xK_bracketleft), XMonad.Actions.CycleWS.moveTo Prev (WSIs $ return isNormalVisibleWS))
          ,((modMask, xK_bracketright), XMonad.Actions.CycleWS.moveTo Next (WSIs $ return isNormalVisibleWS))
+         ,((modMask, xK_f), spawn "files")
+         ,((modMask, xK_o), spawn "brave-browser")
     ] ++
 -- multimedia keys
     [
