@@ -57,3 +57,16 @@ install-tmux:
 	$(info installing tmux config)
 	rm -f ~/.tmux.conf
 	ln -s `pwd`/tmux/tmux.conf ~/.tmux.conf
+
+DOOM_CONFIG := ~/.doom.d/config.el
+LOAD_EXPORT_DEFS := (after! (org-roam) (load! "mc-export-defs"))
+
+install-emacs:
+ifeq "" "$(wildcard $(DOOM_CONFIG))"
+	$(error no $(DOOM_CONFIG) present, can't add custom emacs functions)
+endif
+	$(info installing emacs config)
+	rm -f ~/.doom.d/mc-export-defs.el
+	ln -s `pwd`/emacs/mc-export-defs.el ~/.doom.d/mc-export-defs.el
+	grep -qxF '$(LOAD_EXPORT_DEFS)' $(DOOM_CONFIG) || echo '$(LOAD_EXPORT_DEFS)' >> $(DOOM_CONFIG)
+
