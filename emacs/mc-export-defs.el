@@ -50,27 +50,32 @@
 )
 
 (defun mc/roam-sitemap-function (title files)
-  "Filters-out nils from files before calling default sitemap function."
-  (org-publish-sitemap-default title (remove '(nil) files))
+  "Sorts file by number of incoming links before calling default sitemap function."
+  (let ((sorted-by-backlinks (mapcar 'cdar (sort (cdr files) #'(lambda (a b) (> (caar a) (caar b)))))))
+    (org-publish-sitemap-default title sorted-by-backlinks)
+    )
   )
 
 (defun mc/roam-sitemap-entry-format (entry style project)
+  "Allows linking files by ID org property instead of filename and
+adds number of backlinks to each entry"
   (cond
       ((not (directory-name-p entry))
          (let ((id (with-temp-buffer (insert-file-contents (org-publish--expand-file-name entry project)) (car (org-property-values "ID")))))
            (if id
-               (if (org-roam-backlinks-get (org-roam-node-from-id id))
-                 (format "[[id:%s][%s]]" id (org-publish-find-title entry project))
-                 nil
-                ) ;; if backlinked
-             (format "[[file:%s][%s]]" entry (org-publish-find-title entry project))
+               (let* ((backlinks (org-roam-backlinks-get (org-roam-node-from-id id)))
+                      (len       (length backlinks))
+                      (formatted (format "[[id:%s][%s (%s)]]" id (org-publish-find-title entry project) len)))
+                 (list len formatted)
+                ) ;; let backlinks
+             (list 0 (format "[[file:%s][%s]]" entry (org-publish-find-title entry project)))
              ) ;; if id
            ) ;; let
          ) ;; file entry
        ((eq style 'tree)
          ;; Return only last subdir.
-         (file-name-nondirectory (directory-file-name entry))) ;; tree
-       (t entry)) ;; cond
+         (list 0 (file-name-nondirectory (directory-file-name entry)))) ;; tree
+       (t ((list 0 entry)))) ;; cond
 )
 
 
