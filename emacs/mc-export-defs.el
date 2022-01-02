@@ -1,9 +1,8 @@
-;;; mc-export-defs.el -*- lexical-binding: t; -*-
 
-(setq org-html-postamble nil)
-(setq org-export-with-section-numbers 1)
+(setq-default org-html-postamble nil)
+(setq-default org-export-with-section-numbers 1)
 
-(setq org-publish-project-alist
+(setq-default org-publish-project-alist
       '(
 
         ("org-roam-notes"
@@ -12,6 +11,7 @@
         :auto-index t
         :sitemap-filename "index.org"
         :sitemap-format-entry mc/roam-sitemap-entry-format
+        :sitemap-function mc/roam-sitemap-function
         :base-extension "org"
         :publishing-directory "~/org/roam-html"
         :recursive t
@@ -49,17 +49,28 @@
         )
 )
 
+(defun mc/roam-sitemap-function (title files)
+  "Filters-out nils from files before calling default sitemap function."
+  (org-publish-sitemap-default title (remove '(nil) files))
+  )
 
 (defun mc/roam-sitemap-entry-format (entry style project)
-  (cond ((not (directory-name-p entry))
+  (cond
+      ((not (directory-name-p entry))
          (let ((id (with-temp-buffer (insert-file-contents (org-publish--expand-file-name entry project)) (car (org-property-values "ID")))))
            (if id
-               (format "[[id:%s][%s]]" id (org-publish-find-title entry project))
-               (format "[[file:%s][%s]]" entry (org-publish-find-title entry project)))))
+               (if (org-roam-backlinks-get (org-roam-node-from-id id))
+                 (format "[[id:%s][%s]]" id (org-publish-find-title entry project))
+                 nil
+                ) ;; if backlinked
+             (format "[[file:%s][%s]]" entry (org-publish-find-title entry project))
+             ) ;; if id
+           ) ;; let
+         ) ;; file entry
        ((eq style 'tree)
          ;; Return only last subdir.
-         (file-name-nondirectory (directory-file-name entry)))
-       (t entry))
+         (file-name-nondirectory (directory-file-name entry))) ;; tree
+       (t entry)) ;; cond
 )
 
 
@@ -125,6 +136,7 @@
 (add-hook 'org-export-before-processing-hook 'collect-backlinks-string)
 
 (defun mc/publish-notes ()
+  "Publishes org notes as html and uploads them to web server."
  (interactive)
  (org-publish "org-roam-notes" t)
  (shell-command "rsync -avh --progress ~/org/roam-html/ -e ssh milos@bytemeer:/volume1/web/"))
@@ -133,3 +145,5 @@
       :prefix "n"
       :desc "Export org notes" "u" #'mc/publish-notes)
 
+(provide 'mc-export-defs)
+;;; mc-export-defs.el ends here
