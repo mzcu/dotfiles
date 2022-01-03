@@ -122,20 +122,13 @@ adds number of backlinks to each entry"
             (dolist (backlink (org-roam-backlinks-get node))
               (let* ((source-node (org-roam-backlink-source-node backlink))
                      (properties (org-roam-backlink-properties backlink))
-                     (outline (when-let ((outline (plist-get properties :outline)))
-                                  (mapconcat #'org-link-display-format outline " > ")))
                      (point (org-roam-backlink-point backlink))
                      (text (s-replace "\n" " " (org-roam-preview-get-contents
                                                 (org-roam-node-file source-node)
                                                 point)))
-                     (reference (format "%s [[id:%s][%s]]\n%s\n%s\n\n"
-                                        (s-repeat (+ (org-roam-node-level node) 2) "*")
+                     (reference (format "- [[id:%s][%s]]\n"
                                         (org-roam-node-id source-node)
-                                        (org-roam-node-title source-node)
-                                        (if outline (format "%s (/%s/)"
-                                        (s-repeat (+ (org-roam-node-level node) 3) "*") outline) "")
-                                        "" ;text
-                                        )))
+                                        (org-roam-node-title source-node))))
                 (insert reference)))))))))
 
 (add-hook 'org-export-before-processing-hook 'collect-backlinks-string)
