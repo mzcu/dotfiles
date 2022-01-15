@@ -10,13 +10,15 @@ endif
 
 install: install-xmonad install-bashrc install-vim install-ideavim install-readline install-tmux
 
+XMONAD_HOME := ~/.config/xmonad
+
 install-xmonad:
-ifdef LINUX:
+ifdef LINUX
 	$(info installing xmonad config)
-	rm -rf ~/.xmonad ~/.xmobarrc ~/.Xresources
-	mkdir ~/.xmonad
-	ln -s `pwd`/xmonad/bin ~/.xmonad/bin
-	ln -s `pwd`/xmonad/xmonad.hs ~/.xmonad/
+	mkdir -p $(XMONAD_HOME)
+	rm $(XMONAD_HOME)/*.hs ~/.xmobarrc ~/.Xresources
+	ln -s `pwd`/xmonad/bin $(XMONAD_HOME)/bin
+	ln -s `pwd`/xmonad/xmonad.hs $(XMONAD_HOME)
 	ln -s `pwd`/xmonad/xmobarrc.hs ~/.xmobarrc
 	ln -s `pwd`/xmonad/Xresources ~/.Xresources
 	xrdb -merge ~/.Xresources
@@ -69,4 +71,3 @@ endif
 	rm -f ~/.doom.d/mc-export-defs.el
 	ln -s `pwd`/emacs/mc-export-defs.el ~/.doom.d/mc-export-defs.el
 	grep -qxF '$(LOAD_EXPORT_DEFS)' $(DOOM_CONFIG) || echo '$(LOAD_EXPORT_DEFS)' >> $(DOOM_CONFIG)
-

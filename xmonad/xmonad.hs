@@ -30,14 +30,14 @@ import qualified Data.Map as M
 main :: IO ()
 main = do
     xmproc <- spawnPipe "xmobar"
-    xmonad $ ewmh defaultConfig
+    xmonad $ ewmh $ docks def
         { 
           modMask            = mod4Mask
         , borderWidth        = 1
         , normalBorderColor  = "black"
         , focusedBorderColor = "gray"
         , terminal           = myTerminal
-        , keys               = \conf -> myKeys conf `M.union` keys defaultConfig conf
+        , keys               = \conf -> myKeys conf `M.union` keys def conf
         , workspaces         = myWorkspaces
         , manageHook         = myManageHook
         , layoutHook         = myLayoutHook
@@ -53,19 +53,20 @@ main = do
         , startupHook        = myStartupHook
         }
 
+
 myStartupHook = windows (viewOnScreen 1 "dashboard") >> windows (viewOnScreen 0 "main")
 
-myTerminal = ".xmonad/bin/st -e tmux"
+myTerminal = "bin/st -e tmux"
 
 myWorkspaces = ["main", "aux1", "aux2", "org", "video", "gaming"] ++ map show [7..8] ++ ["dashboard"]
 
 myManageHook = manageDocks <+> composeAll
     [
-      className =? "vlc"	          --> doShift "video" <+> doFullFloat,
+      className =? "vlc"                  --> doShift "video" <+> doFullFloat,
       className =? "Steam"		  --> doShift "gaming",
       isFullscreen                        --> doFullFloat,
       isDialog                            --> doCenterFloat
-    ] <+> scratchpadManageHookDefault <+> manageHook defaultConfig
+    ] <+> scratchpadManageHookDefault <+> manageHook def
 
 myLayoutHook = lessBorders OnlyScreenFloat $ onWorkspace "dashboard" portraitLayout myLayout
 
@@ -74,7 +75,7 @@ portraitLayout = spacing' 12 $ Column 1.6
 
 myLayout = withSpacing ||| noBorders (fullscreenFull Full)
   where
-     withSpacing = avoidStruts (tiled ||| multiColumn ||| (spacing' 25 $ Full))
+     withSpacing = avoidStruts (tiled ||| multiColumn ||| (gaps [(L,500),(R,500),(U,200),(D,200)] Full))
      tiled   = ResizableTall nmaster delta ratio []
      multiColumn = ThreeColMid 1 (3/100) (1/3)
      nmaster = 1
@@ -86,8 +87,7 @@ myLayout = withSpacing ||| noBorders (fullscreenFull Full)
 spacing' :: Int -> l a -> ModifiedLayout Spacing (ModifiedLayout Gaps l) a
 spacing' x = spacing x . gaps [(U,x),(D,x),(R,x),(L,x)]
 
--- docksEventHook fixes windows hiding xmobar on workspace 1
-myHandleEventHook = fullscreenEventHook <+> docksEventHook <+> dynamicWindowPropertyHook <+> handleEventHook defaultConfig
+myHandleEventHook = fullscreenEventHook <+> dynamicWindowPropertyHook <+> handleEventHook def
 
 dynamicWindowPropertyHook = dynamicPropertyChange "WM_NAME" (className =? "Spotify" --> doShift "dashboard")
 
@@ -112,11 +112,17 @@ isNormalVisibleWS wisp = let
                             s = W.stack wisp
                             in not ("NSP" `isPrefixOf` t) && isJust s
 
+
+-- spawn for local binaries which are not on system path
+spawn' :: MonadIO m => String -> m ()
+spawn' s = spawn $ ".config/xmonad/" ++ s
+
+
 myKeys conf @ XConfig { XMonad.modMask = modMask } = M.fromList $
 -- custom mappings
     [ 
-          ((modMask, xK_Page_Down), spawn ".xmonad/bin/lang-change")
-         ,((controlMask, xK_grave), scratchpadSpawnActionCustom ".xmonad/bin/st -n scratchpad -e tmux")
+          ((modMask, xK_Page_Down), spawn' "bin/lang-change")
+         ,((controlMask, xK_grave), scratchpadSpawnActionCustom "bin/st -n scratchpad -e tmux")
          ,((modMask, xK_a), sendMessage MirrorExpand)
          ,((modMask, xK_z), sendMessage MirrorShrink)
          ,((modMask .|. shiftMask, xK_l), spawn "slock & sleep 1 && xset dpms force off")
@@ -130,9 +136,9 @@ myKeys conf @ XConfig { XMonad.modMask = modMask } = M.fromList $
           ((0, xK_XF86AudioPlay), spawn "sp play")
          ,((0, xK_XF86AudioPrev), spawn "sp prev")
          ,((0, xK_XF86AudioNext), spawn "sp next")
-         ,((0, xK_XF86AudioMute), spawn ".xmonad/bin/volume toggle")
-         ,((0, xK_XF86AudioLowerVolume), spawn ".xmonad/bin/volume down")
-         ,((0, xK_XF86AudioRaiseVolume), spawn ".xmonad/bin/volume up")
+         ,((0, xK_XF86AudioMute), spawn' "bin/volume toggle")
+         ,((0, xK_XF86AudioLowerVolume), spawn' "bin/volume down")
+         ,((0, xK_XF86AudioRaiseVolume), spawn' "bin/volume up")
          ,((0, xK_XF86Launch5), spawn "lights")
     ]
 -- multi-display keys customization described
