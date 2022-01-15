@@ -143,5 +143,8 @@ adds number of backlinks to each entry"
       :prefix "n"
       :desc "Export org notes" "u" #'mc/publish-notes)
 
+
+(setq-default org-agenda-files (directory-files-recursively "~/org/" "\\.org$"))
+
 (provide 'mc-export-defs)
 ;;; mc-export-defs.el ends here
