@@ -3,18 +3,10 @@ function define {
 	(echo -e "Phoneme mnemonics: $(espeak -ven-uk-rp -x -s 120 "$1" 2> /dev/null)\n"; dict "$1") | less
 }
 
-# Load autojump if present
-autojump=/usr/share/autojump/autojump.sh
-if [ -f $autojump ]; then
-	. $autojump
-fi
-
-# Load bash-git-prompt if present
-gitprompt=~/.bash-git-prompt/gitprompt.sh
-if [ -f $gitpropmt ]; then
-	. $gitprompt
-	GIT_PROMPT_ONLY_IN_REPO=1
-	GIT_PROMPT_THEME=Default_Ubuntu
+# Load z if present
+z=~/.local/bin/z.sh
+if [ -f $z ]; then
+	. $z
 fi
 
 function del_blackholes {
