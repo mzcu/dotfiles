@@ -10,6 +10,7 @@
         :auto-sitemap t
         :auto-index t
         :sitemap-filename "index.org"
+        :sitemap-title "Notes"
         :sitemap-format-entry mc/roam-sitemap-entry-format
         :sitemap-function mc/roam-sitemap-function
         :base-extension "org"
@@ -51,10 +52,12 @@
 
 (defun mc/roam-sitemap-function (title files)
   "Sorts file by number of incoming links before calling default sitemap function."
-  (let ((sorted-by-backlinks (mapcar 'cdar (sort (cdr files) #'(lambda (a b) (> (caar a) (caar b)))))))
-    (org-publish-sitemap-default title sorted-by-backlinks)
+  (let* ((sorted-by-backlinks (mapcar 'cdar (sort (cdr files) #'(lambda (a b) (> (caar a) (caar b))))))
+         (lnks (cons (car files) sorted-by-backlinks)))
+         (org-publish-sitemap-default title lnks)
     )
-  )
+
+)
 
 (defun mc/roam-sitemap-entry-format (entry style project)
   "Allows linking files by ID org property instead of filename and
@@ -75,7 +78,7 @@ adds number of backlinks to each entry"
        ((eq style 'tree)
          ;; Return only last subdir.
          (list 0 (file-name-nondirectory (directory-file-name entry)))) ;; tree
-       (t ((list 0 entry)))) ;; cond
+       (t (list 0 entry))) ;; cond
 )
 
 
@@ -109,6 +112,7 @@ adds number of backlinks to each entry"
            ;; sort in order of decreasing end position
            (nodes-in-file-sorted (->> (-zip nodes-in-file nodes-end-position)
                                       (--sort (> (cdr it) (cdr other))))))
+
       (dolist (node-and-end nodes-in-file-sorted)
         (-let (((node . end-position) node-and-end))
           (when (org-roam-backlinks-get node)
