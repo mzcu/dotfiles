@@ -1,18 +1,31 @@
 #!/bin/bash
 
 layout=$(setxkbmap -query | grep layout | awk '{print $2}')
+variant=$(setxkbmap -query | grep variant | awk '{print $2}')
 
 function notify {
   notify-send -u low -i config-language -t 1000 "Keyboard layout changed" "Layout set to $1" -h string:x-canonical-private-synchronous:true
 }
 
+function us {
+ setxkbmap us
+ notify us
+}
+
 case $layout in
 	us)
 		setxkbmap rs
-		notify rs
+		notify rs-cyrillic
+        ;;
+	rs)
+		if [ "$variant" = "latin" ]; then
+			us
+		else
+			setxkbmap rs -variant latin
+			notify rs-latin
+		fi
         ;;
 	*)
-		setxkbmap us
-		notify us
+		us
 	;;
 esac
