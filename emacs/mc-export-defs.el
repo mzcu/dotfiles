@@ -2,6 +2,7 @@
 (setq-default org-html-postamble nil)
 (setq-default org-export-with-section-numbers 1)
 
+
 (setq-default org-publish-project-alist
       '(
 
@@ -19,7 +20,7 @@
         :publishing-function org-html-publish-to-html
         :headline-levels 4
         :auto-preamble t
-        )
+        :html-head-extra "<style>@media (prefers-color-scheme: dark) { body { background: black; color: #ddd } }</style>")
 
         ("org-blog"
         :base-directory "~/org/blog"
