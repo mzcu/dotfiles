@@ -21,20 +21,20 @@ nnoremap <leader>w :w<cr>
 nnoremap <leader>U gUiw<cr> " Uppercase a word
 
 " IDE actions
-nnoremap <leader>f :action ReformatCode<cr>
-nnoremap <leader>o :action OptimizeImports<cr>
-nnoremap <leader>x :action Maven.ExecuteGoal<cr>
+map <leader>f <Action>(ReformatCode)
+map <leader>o <Action>(OptimizeImports)
+map <leader>x <Action>(Maven.ExecuteGoal)
 
-nnoremap <leader>gc :action GotoClass<cr>
-nnoremap <leader>gd :action GotoDeclaration<cr>
-nnoremap <leader>gi :action GotoImplementation<cr>
+map <leader>gc <Action>(GotoClass)
+map <leader>gd <Action>(GotoDeclaration)
+map <leader>gi <Action>(GotoImplementation)
 
-nnoremap <leader>tt :action GenerateTestMethod<cr>
-nnoremap <leader>gg :action Generate<cr>
-nnoremap <leader>bb :action BuildMenu<cr>
-nnoremap <leader>d :action QuickJavaDoc<cr>
-nnoremap <leader>[ :action PreviousTab<cr>
-nnoremap <leader>] :action NextTab<cr>
-nnoremap <leader>T :action RerunFailedTests<cr>
-nnoremap <leader>r :action RunMenu<cr>
-nnoremap <leader>b :action ByteCodeViewer<cr>
+map <leader>tt <Action>(GenerateTestMethod)
+map <leader>gg <Action>(Generate)
+map <leader>bb <Action>(BuildMenu)
+map <leader>d <Action>(QuickJavaDoc)
+map <leader>[ <Action>(PreviousTab)
+map <leader>] <Action>(NextTab)
+map <leader>T <Action>(RerunFailedTests)
+map <leader>r <Action>(RunMenu)
+map <leader>b <Action>(ByteCodeViewer)
