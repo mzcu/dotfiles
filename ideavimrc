@@ -11,8 +11,8 @@ set clipboard+=unnamed " use system clipboard
 
 let mapleader=" "
 
-nnoremap <leader>R :source ~/.ideavimrc<cr>
-nnoremap <leader>E :e ~/.ideavimrc<cr>
+nnoremap <leader>R :source ~/.config/ideavim/ideavimrc<cr>
+nnoremap <leader>E :e ~/.config/ideavim/ideavimrc<cr>
 
 nnoremap <leader>n :back<cr>
 nnoremap <leader>m :next<cr>
@@ -36,5 +36,10 @@ map <leader>d <Action>(QuickJavaDoc)
 map <leader>[ <Action>(PreviousTab)
 map <leader>] <Action>(NextTab)
 map <leader>T <Action>(RerunFailedTests)
+map <leader>cr <Action>(RunContextGroup)
 map <leader>r <Action>(RunMenu)
 map <leader>b <Action>(ByteCodeViewer)
+
+map <leader>re <Action>(RenameElement)
+nnoremap dam :action MethodUp<cr>v0Of{%d
+nnoremap yam :action MethodUp<cr>v0Of{%y

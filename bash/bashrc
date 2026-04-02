@@ -12,3 +12,14 @@ fi
 function del_blackholes {
 	sudo ip route list | grep blackhole | while read l; do sudo ip route del $l; done
 }
+
+
+# git worktree utils
+wt() {
+  git worktree add "../$(basename $PWD)-$1" -b "$1"
+  code "../$(basename $PWD)-$1"
+}
+wt-rm() {
+  git worktree remove "../$(basename $PWD)-$1"
+}
+alias wt-ls="git worktree list"

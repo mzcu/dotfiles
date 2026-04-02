@@ -42,8 +42,8 @@ endif
 
 install-ideavim:
 	$(info installing idea vim plugin config)
-	rm -f ~/.ideavimrc
-	ln -s `pwd`/ideavimrc ~/.ideavimrc
+	rm -f ~/.config/ideavim/ideavimrc
+	ln -s `pwd`/ideavimrc ~/.config/ideavim/ideavimrc
 
 install-powerline-fonts:
 	$(info installing powerline fonts)
@@ -57,8 +57,9 @@ install-readline:
 
 install-tmux:
 	$(info installing tmux config)
-	rm -f ~/.tmux.conf
-	ln -s `pwd`/tmux/tmux.conf ~/.tmux.conf
+	rm -f ~/.config/tmux/tmux.conf
+	mkdir ~/.config/tmux
+	ln -s `pwd`/tmux/tmux.conf ~/.config/tmux/tmux.conf
 
 DOOM_CONFIG := ~/.doom.d/config.el
 LOAD_EXPORT_DEFS := (after! (org-roam) (load! "mc-export-defs"))
