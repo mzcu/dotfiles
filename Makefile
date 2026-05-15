@@ -61,6 +61,19 @@ install-tmux:
 	mkdir ~/.config/tmux
 	ln -s `pwd`/tmux/tmux.conf ~/.config/tmux/tmux.conf
 
+setup-mac: setup-mac-screenshots
+
+setup-mac-screenshots:
+ifdef MACOS
+	$(info configuring screenshots directory)
+	mkdir -p ~/Pictures/Screenshots
+	defaults write com.apple.screencapture location ~/Pictures/Screenshots
+	killall SystemUIServer
+	defaults write com.apple.dock persistent-others -array-add \
+		'<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>$(HOME)/Pictures/Screenshots</string><key>_CFURLStringType</key><integer>0</integer></dict></dict><key>tile-type</key><string>directory-tile</string></dict>'
+	killall Dock
+endif
+
 DOOM_CONFIG := ~/.doom.d/config.el
 LOAD_EXPORT_DEFS := (after! (org-roam) (load! "mc-export-defs"))
 
